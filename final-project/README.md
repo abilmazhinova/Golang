@@ -4,7 +4,8 @@ This API about characters from Harry Potter universe
 ## DB structure
 ![db structure](image.png)
 
-  Table characters {
+```
+Table characters {
   ID        bigserial 
   CreatedAt timestamp(0) 
   UpdatedAt timestamp(0) 
@@ -12,8 +13,8 @@ This API about characters from Harry Potter universe
   LastName text
   House text 
   OriginStatus text 
-  }
-
+}
+```
 ## API structure
 
 ### Endpoints
