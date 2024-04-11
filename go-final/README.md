@@ -24,6 +24,6 @@ Table characters {
 | Метод | URL | Описание |
 |---|---|---|
 | POST | /api/v1/character | Регистрация нового персонажа. |
-| GET | /api/v1/characters/{ID} | Получить персонажа по ID. |
-| PUT | /api/v1/characters/{ID} | Обновить персонажа по ID. |
-| DELETE | /api/v1/characters/{ID} | Удалить персонажа по ID. |
+| GET | /api/v1/character/{ID} | Получить персонажа по ID. |
+| PUT | /api/v1/character/{ID} | Обновить персонажа по ID. |
+| DELETE | /api/v1/character/{ID} | Удалить персонажа по ID. |
