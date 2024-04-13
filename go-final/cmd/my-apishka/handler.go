@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"go-final/pkg/my-apishka/model"
-	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func (app *application) respondWithError(w http.ResponseWriter, code int, message string) {
@@ -145,4 +146,56 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst int
 	}
 
 	return nil
+}
+
+func (app *application) getByHouseHandler(w http.ResponseWriter, r *http.Request) {
+	house := r.URL.Query().Get("house")
+
+	if house == "" {
+		app.respondWithError(w, http.StatusBadRequest, "Please, write house name and try again.")
+		return
+	}
+
+	characters, err := app.models.Characters.GetByHouse(house)
+	if err != nil {
+		app.respondWithError(w, http.StatusInternalServerError, "Fail, please try again.")
+		return
+	}
+
+	app.respondWithJSON(w, http.StatusOK, characters)
+}
+
+func (app *application) getByLastNameHandler(w http.ResponseWriter, r *http.Request) {
+	characters, err := app.models.Characters.GetByLastName()
+	if err != nil {
+		app.respondWithError(w, http.StatusInternalServerError, "Fail, please try again.")
+		return
+	}
+
+	app.respondWithJSON(w, http.StatusOK, characters)
+}
+
+func (app *application) getCharactersPaginationHandler(w http.ResponseWriter, r *http.Request) {
+	limitStr := r.URL.Query().Get("limit")
+	offsetStr := r.URL.Query().Get("offset")
+
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		app.respondWithError(w, http.StatusBadRequest, "Wrong limit parameter.")
+		return
+	}
+
+	offset, err := strconv.Atoi(offsetStr)
+	if err != nil {
+		app.respondWithError(w, http.StatusBadRequest, "Wrong offset parameter.")
+		return
+	}
+
+	characters, err := app.models.Characters.GetCharactersPagination(limit, offset)
+	if err != nil {
+		app.respondWithError(w, http.StatusInternalServerError, "Fail, please try again.")
+		return
+	}
+
+	app.respondWithJSON(w, http.StatusOK, characters)
 }

@@ -30,7 +30,7 @@ func main() {
 	var cfg config
 	flag.StringVar(&cfg.port, "port", ":8081", "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
-	flag.StringVar(&cfg.db.dsn, "db-dsn", "postgres://postgres:Barakat2005%23@localhost/go-final?sslmode=disable", "PostgreSQL DSN")
+	flag.StringVar(&cfg.db.dsn, "db-dsn", "postgres://postgres:Barakat2005%23@localhost/gofinal?sslmode=disable", "PostgreSQL DSN")
 	flag.Parse()
 
 	db, err := openDB(cfg)
@@ -58,6 +58,11 @@ func (app *application) run() {
 	v1.HandleFunc("/character/{id}", app.getCharacterHandler).Methods("GET")
 	v1.HandleFunc("/character/{id}", app.updateCharacterHandler).Methods("PUT")
 	v1.HandleFunc("/character/{id}", app.deleteCharacterHandler).Methods("DELETE")
+
+	// функции по ТСИС3
+	v1.HandleFunc("/charactersfilter", app.getByHouseHandler).Methods("GET")                  //по факультету
+	v1.HandleFunc("/characterssorting", app.getByLastNameHandler).Methods("GET")              //по фамилиям
+	v1.HandleFunc("/characterspagination", app.getCharactersPaginationHandler).Methods("GET") //устанавливается лимит на вывод данных
 
 	log.Printf("Starting server on %s\n", app.config.port)
 	err := http.ListenAndServe(app.config.port, r)

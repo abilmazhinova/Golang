@@ -49,7 +49,8 @@ func (c CharacterModel) Get(id int) (*Character, error) {
 	defer cancel()
 
 	row := c.DB.QueryRowContext(ctx, query, id)
-	err := row.Scan(&character.ID, &character.CreatedAt, &character.UpdatedAt, &character.FirstName, &character.LastName, &character.House, &character.OriginStatus)
+	err := row.Scan(&character.ID, &character.CreatedAt, &character.UpdatedAt, &character.FirstName,
+		&character.LastName, &character.House, &character.OriginStatus)
 	if err != nil {
 		return nil, err
 	}
@@ -82,4 +83,108 @@ func (c CharacterModel) Delete(id int) error {
 
 	_, err := c.DB.ExecContext(ctx, query, id)
 	return err
+}
+
+// ТСИС3
+// фильтр по факультетам
+func (m *CharacterModel) GetByHouse(house string) ([]*Character, error) {
+	query := `
+		SELECT ID, CreatedAt, UpdatedAt, FirstName, LastName, House, OriginStatus
+		FROM characters
+        WHERE house = $1
+    `
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query, house)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var characters []*Character
+	for rows.Next() {
+		character := &Character{}
+		err := rows.Scan(&character.ID, &character.CreatedAt, &character.UpdatedAt, &character.FirstName,
+			&character.LastName, &character.House, &character.OriginStatus)
+		if err != nil {
+			return nil, err
+		}
+		characters = append(characters, character)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return characters, nil
+}
+
+// сортировка персонажей по фамилиям
+func (m *CharacterModel) GetByLastName() ([]*Character, error) {
+	query := `
+		SELECT ID, CreatedAt, UpdatedAt, FirstName, LastName, House, OriginStatus
+		FROM characters
+        ORDER BY LastName
+    `
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var characters []*Character
+	for rows.Next() {
+		character := &Character{}
+		err := rows.Scan(&character.ID, &character.CreatedAt, &character.UpdatedAt, &character.FirstName,
+			&character.LastName, &character.House, &character.OriginStatus)
+		if err != nil {
+			return nil, err
+		}
+		characters = append(characters, character)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return characters, nil
+}
+
+// берет данные по лимиту и оффсету
+func (m *CharacterModel) GetCharactersPagination(limit, offset int) ([]*Character, error) {
+	query := `
+		SELECT ID, CreatedAt, UpdatedAt, FirstName, LastName, House, OriginStatus
+		FROM characters
+        ORDER BY ID
+        LIMIT $1 OFFSET $2
+    `
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var characters []*Character
+	for rows.Next() {
+		character := &Character{}
+		err := rows.Scan(&character.ID, &character.CreatedAt, &character.UpdatedAt, &character.FirstName,
+			&character.LastName, &character.House, &character.OriginStatus)
+		if err != nil {
+			return nil, err
+		}
+		characters = append(characters, character)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return characters, nil
 }
