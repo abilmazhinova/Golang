@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"go-final/pkg/my-apishka/model"
+	// "go-final/pkg/my-apishka/validator"
 	"net/http"
 	"strconv"
 
@@ -136,17 +137,6 @@ func (app *application) deleteCharacterHandler(w http.ResponseWriter, r *http.Re
 	app.respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
-func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
-	dec := json.NewDecoder(r.Body)
-	dec.DisallowUnknownFields()
-
-	err := dec.Decode(dst)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
 
 func (app *application) getByHouseHandler(w http.ResponseWriter, r *http.Request) {
 	house := r.URL.Query().Get("house")
