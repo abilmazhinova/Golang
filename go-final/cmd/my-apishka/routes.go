@@ -26,7 +26,9 @@ func (app *application) routes() http.Handler {
 	v1.HandleFunc("/character", app.createCharacterHandler).Methods("POST")
 	v1.HandleFunc("/character/{id}", app.getCharacterHandler).Methods("GET")
 	v1.HandleFunc("/character/{id}", app.updateCharacterHandler).Methods("PUT")
-	v1.HandleFunc("/character/{id}", app.deleteCharacterHandler).Methods("DELETE")
+	//для специальных пользователей
+	v1.HandleFunc("/characters/{id}", app.requirePermissions("characters:write",app.deleteCharacterHandler)).Methods("DELETE")
+	// v1.HandleFunc("/character/{id}", app.deleteCharacterHandler).Methods("DELETE")
 
 	// функции по ТСИС3
 	v1.HandleFunc("/charactersfilter", app.getByHouseHandler).Methods("GET")                  //по факультету
