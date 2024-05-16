@@ -5,7 +5,7 @@ This API about characters from Harry Potter universe
 Aisha Abilmazhinova 22B030280
 
 ## DB structure
-![db structure](image.png)
+![db structure](img.png)
 
 ```
 Table characters {
