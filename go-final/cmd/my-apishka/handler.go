@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-)
+) 
 
 func (app *application) respondWithError(w http.ResponseWriter, code int, message string) {
 	app.respondWithJSON(w, code, map[string]string{"error": message})
@@ -128,7 +128,7 @@ func (app *application) deleteCharacterHandler(w http.ResponseWriter, r *http.Re
 		app.respondWithError(w, http.StatusBadRequest, "Invalid character ID")
 		return
 	}
-
+ 
 	err = app.models.Characters.Delete(id)
 	if err != nil {
 		app.respondWithError(w, http.StatusInternalServerError, "500 Internal Server Error")

@@ -4,7 +4,7 @@ import "regexp"
 
 var (
 	// EmailRX is a regex for sanity checking the format of email addresses.
-	// The regex pattern used is taken from  https://html.spec.whatwg.org/#valid-e-mail-address.
+	// The regex pattern used is taken from https://html.spec.whatwg.org/#valid-e-mail-address.
 	EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 )
 
@@ -62,4 +62,9 @@ func Unique(values []string) bool {
 	}
 
 	return len(values) == len(uniqueValues)
+}
+
+// NotEmpty checks if a string is not empty.
+func NotEmpty(value string) bool {
+	return value != ""
 }

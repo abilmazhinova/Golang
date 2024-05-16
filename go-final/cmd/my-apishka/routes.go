@@ -40,6 +40,22 @@ func (app *application) routes() http.Handler {
 	v1.HandleFunc("/users/activated", app.activateUserHandler).Methods("PUT")
 	v1.HandleFunc("/users/login", app.createAuthenticationTokenHandler).Methods("POST")
 
+	//для сущности коммент
+	v1.HandleFunc("/comments", app.CreateCommentHandler).Methods("POST")
+	v1.HandleFunc("/comments/{id}", app.GetCommentHandler).Methods("GET")
+	v1.HandleFunc("/comments/{id}", app.UpdateCommentHandler).Methods("PUT")
+	v1.HandleFunc("/comments/{id}", app.requirePermissions("comments:write",app.DeleteCommentHandler)).Methods("DELETE")
+	
+	//фильтрация,сортировка,пагинация для комментов
+	v1.HandleFunc("/commentsfilter", app.getCommentsByUserIDHandler).Methods("GET")              //фильтр по айди юзера указанного в парам   
+	v1.HandleFunc("/commentssorting", app.getCommentsByCharacterIDHandler).Methods("GET")        // сортинг по айди персонажей    
+	v1.HandleFunc("/commentspagination", app.getCharactersPaginationHandler).Methods("GET")      //устанавливается лимит на вывод данных
+
+	//вывод списка комментариев по айди персонажа
+	v1.HandleFunc("/character/{id}/comments",app.getCharacterCommentsHandler).Methods("GET")
+
+	//вывод списка комментариев по айди юзера
+	v1.HandleFunc("/users/{id}/comments", app.getUserCommentsHandler).Methods("GET")
 
 	return app.authenticate(r)
 }

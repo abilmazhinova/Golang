@@ -167,7 +167,7 @@ func (m *CharacterModel) GetCharactersPagination(limit, offset int) ([]*Characte
 
 	rows, err := m.DB.QueryContext(ctx, query, limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, err 
 	}
 	defer rows.Close()
 
